@@ -79,29 +79,27 @@ export default function LoginPage() {
           borderRadius: '0 0 2px 2px',
         }} />
 
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div style={{
-            position: 'relative', width: 280, height: 94, margin: '0 auto 6px',
-          }}>
-            <Image
-              src="/logo.png"
-              alt="TANAN Mining — บริษัท ธนธรณินทร์ จำกัด"
-              fill
-              style={{ objectFit: 'contain', mixBlendMode: 'screen' }}
-              priority
-            />
-          </div>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            fontSize: 11, color: 'rgba(200,144,42,0.7)',
-            padding: '4px 14px', borderRadius: 20,
-            background: 'rgba(200,144,42,0.08)', border: '1px solid rgba(200,144,42,0.15)',
-          }}>
-            <Shield size={11} />
-            Mining Operations System
-          </div>
-        </div>
+       {/* Logo */}
+<div style={{ textAlign: 'center', marginBottom: 36 }}>
+  <div style={{
+    background: 'linear-gradient(135deg, #f5ede3 0%, #eedcca 50%, #f0e0c5 100%)',
+    borderRadius: 18,
+    padding: '16px 28px',
+    margin: '0 auto 16px',
+    display: 'inline-block',
+    border: '1px solid rgba(200,144,42,0.4)',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+  }}>
+    <div style={{ position: 'relative', width: 320, height: 108 }}>
+      <Image
+        src="/logo.png"
+        alt="TANAN Mining"
+        fill
+        style={{ objectFit: 'contain' }}
+        priority
+      />
+    </div>
+  </div>
 
         {/* Title */}
         <div style={{ marginBottom: 28, textAlign: 'center' }}>
