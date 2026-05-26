@@ -30,98 +30,104 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(145deg, #0f0400 0%, #1a0800 30%, #2a1205 60%, #3d1c08 85%, #5c2c0e 100%)',
+      background: 'linear-gradient(145deg, #f9f1e6 0%, #f2e4cf 40%, #eedcca 70%, #f5ece0 100%)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       position: 'relative', overflow: 'hidden',
     }}>
-      <div style={{ position:'absolute', width:600, height:600, borderRadius:'50%', border:'1px solid rgba(184,131,42,0.08)', top:'50%', left:'50%', transform:'translate(-50%,-50%)', pointerEvents:'none' }} />
-      <div style={{ position:'absolute', width:900, height:900, borderRadius:'50%', border:'1px solid rgba(184,131,42,0.05)', top:'50%', left:'50%', transform:'translate(-50%,-50%)', pointerEvents:'none' }} />
-      <div style={{ position:'absolute', width:500, height:300, background:'radial-gradient(ellipse, rgba(184,131,42,0.12) 0%, transparent 70%)', top:'20%', left:'50%', transform:'translateX(-50%)', pointerEvents:'none' }} />
+      {/* Background decorative rings */}
+      <div style={{ position:'absolute', width:700, height:700, borderRadius:'50%', border:'1px solid rgba(184,131,42,0.12)', top:'50%', left:'50%', transform:'translate(-50%,-50%)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', width:1000, height:1000, borderRadius:'50%', border:'1px solid rgba(184,131,42,0.07)', top:'50%', left:'50%', transform:'translate(-50%,-50%)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', width:500, height:300, background:'radial-gradient(ellipse, rgba(200,144,42,0.1) 0%, transparent 70%)', top:'10%', left:'50%', transform:'translateX(-50%)', pointerEvents:'none' }} />
 
+      {/* Card */}
       <div style={{
-        width:'100%', maxWidth:440,
-        background:'linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
-        border:'1px solid rgba(184,131,42,0.2)', borderRadius:20, padding:'48px 40px',
-        backdropFilter:'blur(20px)',
-        boxShadow:'0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)',
+        width:'100%', maxWidth:460,
+        background:'#ffffff',
+        border:'1px solid rgba(184,131,42,0.25)',
+        borderRadius:24,
+        padding:'48px 44px',
+        boxShadow:'0 20px 80px rgba(60,20,0,0.12), 0 4px 20px rgba(60,20,0,0.06)',
         position:'relative', zIndex:1,
       }}>
-        <div style={{ position:'absolute', top:0, left:40, right:40, height:2, background:'linear-gradient(90deg, transparent, #c8902a, #e8b84a, #c8902a, transparent)', borderRadius:'0 0 2px 2px' }} />
+        {/* Gold top stripe */}
+        <div style={{ position:'absolute', top:0, left:0, right:0, height:4, background:'linear-gradient(90deg, #3d1c08, #7a4018, #c8902a, #e8b84a, #c8902a, #7a4018, #3d1c08)', borderRadius:'24px 24px 0 0' }} />
 
-        {/* Logo — black container for maximum contrast */}
-        <div style={{ textAlign:'center', marginBottom:36 }}>
+        {/* Logo */}
+        <div style={{ textAlign:'center', marginBottom:32 }}>
           <div style={{
-            background:'#000000',
+            background:'linear-gradient(145deg, #ffffff 0%, #fdf8f2 100%)',
             borderRadius:16,
-            padding:'16px 32px',
-            margin:'0 auto 14px',
+            padding:'20px 36px',
+            margin:'0 auto 16px',
             display:'inline-block',
-            border:'1.5px solid rgba(200,144,42,0.7)',
-            boxShadow:'0 0 24px rgba(200,144,42,0.25), 0 8px 32px rgba(0,0,0,0.6)',
+            border:'1.5px solid rgba(200,144,42,0.35)',
+            boxShadow:'0 4px 20px rgba(200,144,42,0.12), inset 0 1px 0 rgba(255,255,255,0.8)',
           }}>
-            <div style={{ position:'relative', width:300, height:100 }}>
+            <div style={{ position:'relative', width:260, height:80 }}>
               <Image src="/logo.png" alt="TANAN Mining" fill style={{ objectFit:'contain' }} priority />
             </div>
           </div>
           <div style={{
             display:'inline-flex', alignItems:'center', gap:6,
-            fontSize:11, color:'rgba(200,144,42,0.8)',
+            fontSize:11, color:'rgba(122,64,24,0.75)',
             padding:'4px 14px', borderRadius:20,
             background:'rgba(200,144,42,0.08)', border:'1px solid rgba(200,144,42,0.2)',
           }}>
-            <Shield size={11} /> Mining Operations System
+            <Shield size={11}/> Mining Operations System
           </div>
         </div>
 
+        {/* Title */}
         <div style={{ marginBottom:28, textAlign:'center' }}>
-          <h2 style={{ fontSize:18, fontWeight:900, color:'#ffffff', letterSpacing:'0.05em', marginBottom:6 }}>Sign in to Dashboard</h2>
-          <p style={{ fontSize:12, color:'rgba(255,255,255,0.38)' }}>Enter your credentials to continue</p>
+          <h2 style={{ fontSize:20, fontWeight:900, color:'#1a0900', letterSpacing:'0.03em', marginBottom:6 }}>Sign in to Dashboard</h2>
+          <p style={{ fontSize:13, color:'#9a7050' }}>Enter your credentials to continue</p>
         </div>
 
+        {/* Form */}
         <form onSubmit={handleLogin} style={{ display:'flex', flexDirection:'column', gap:16 }}>
           <div>
-            <label style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em', display:'block', marginBottom:8 }}>Email Address</label>
+            <label style={{ fontSize:11, fontWeight:700, color:'#7a4018', textTransform:'uppercase', letterSpacing:'0.08em', display:'block', marginBottom:8 }}>Email Address</label>
             <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="admin@tananmining.com" required
-              style={{ width:'100%', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(184,131,42,0.25)', borderRadius:10, padding:'12px 16px', fontSize:14, color:'#ffffff', outline:'none', fontFamily:'inherit' }}
-              onFocus={e=>{ e.target.style.borderColor='rgba(200,144,42,0.7)'; e.target.style.background='rgba(255,255,255,0.08)'; }}
-              onBlur={e =>{ e.target.style.borderColor='rgba(184,131,42,0.25)'; e.target.style.background='rgba(255,255,255,0.06)'; }}
+              style={{ width:'100%', background:'#faf6f0', border:'1.5px solid #e5d5c0', borderRadius:10, padding:'12px 16px', fontSize:14, color:'#1a0900', outline:'none', fontFamily:'inherit', transition:'all 0.2s' }}
+              onFocus={e=>{ e.target.style.borderColor='#c8902a'; e.target.style.background='#fffcf7'; e.target.style.boxShadow='0 0 0 3px rgba(200,144,42,0.1)'; }}
+              onBlur={e =>{ e.target.style.borderColor='#e5d5c0'; e.target.style.background='#faf6f0'; e.target.style.boxShadow='none'; }}
             />
           </div>
           <div>
-            <label style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em', display:'block', marginBottom:8 }}>Password</label>
+            <label style={{ fontSize:11, fontWeight:700, color:'#7a4018', textTransform:'uppercase', letterSpacing:'0.08em', display:'block', marginBottom:8 }}>Password</label>
             <div style={{ position:'relative' }}>
               <input type={showPw?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" required
-                style={{ width:'100%', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(184,131,42,0.25)', borderRadius:10, padding:'12px 44px 12px 16px', fontSize:14, color:'#ffffff', outline:'none', fontFamily:'inherit' }}
-                onFocus={e=>{ e.target.style.borderColor='rgba(200,144,42,0.7)'; e.target.style.background='rgba(255,255,255,0.08)'; }}
-                onBlur={e =>{ e.target.style.borderColor='rgba(184,131,42,0.25)'; e.target.style.background='rgba(255,255,255,0.06)'; }}
+                style={{ width:'100%', background:'#faf6f0', border:'1.5px solid #e5d5c0', borderRadius:10, padding:'12px 44px 12px 16px', fontSize:14, color:'#1a0900', outline:'none', fontFamily:'inherit', transition:'all 0.2s' }}
+                onFocus={e=>{ e.target.style.borderColor='#c8902a'; e.target.style.background='#fffcf7'; e.target.style.boxShadow='0 0 0 3px rgba(200,144,42,0.1)'; }}
+                onBlur={e =>{ e.target.style.borderColor='#e5d5c0'; e.target.style.background='#faf6f0'; e.target.style.boxShadow='none'; }}
               />
-              <button type="button" onClick={()=>setShowPw(v=>!v)} style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.4)', padding:4 }}>
+              <button type="button" onClick={()=>setShowPw(v=>!v)} style={{ position:'absolute', right:12, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'#c4a07a', padding:4 }}>
                 {showPw ? <EyeOff size={16}/> : <Eye size={16}/>}
               </button>
             </div>
           </div>
 
           {error && (
-            <div style={{ background:'rgba(220,50,50,0.12)', border:'1px solid rgba(220,80,80,0.3)', borderRadius:8, padding:'10px 14px', fontSize:12, color:'#f87171' }}>{error}</div>
+            <div style={{ background:'#fff0f0', border:'1px solid #f5c0c0', borderRadius:8, padding:'10px 14px', fontSize:12, color:'#c0392b' }}>{error}</div>
           )}
 
           <button type="submit" disabled={loading} style={{
             marginTop:4, width:'100%',
-            background: loading ? 'linear-gradient(135deg,#3d1c08,#5c2c0e)' : 'linear-gradient(135deg,#2a1205 0%,#4a2010 40%,#7a4018 70%,#c8902a 100%)',
-            border:'1px solid rgba(200,144,42,0.4)', borderRadius:12, padding:'13px 0',
+            background: loading ? 'linear-gradient(135deg,#c4a07a,#e5d5c0)' : 'linear-gradient(135deg, #2a1205 0%, #4a2010 40%, #7a4018 70%, #c8902a 100%)',
+            border:'none', borderRadius:12, padding:'14px 0',
             fontSize:14, fontWeight:900, color:'#ffffff', cursor:loading?'not-allowed':'pointer',
             letterSpacing:'0.06em', display:'flex', alignItems:'center', justifyContent:'center', gap:8,
-            boxShadow: loading?'none':'0 4px 20px rgba(200,144,42,0.25)',
+            boxShadow: loading?'none':'0 6px 24px rgba(122,64,24,0.35)',
             opacity:loading?0.7:1, transition:'all 0.2s',
           }}>
             <LogIn size={15}/> {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <div style={{ marginTop:32, paddingTop:24, borderTop:'1px solid rgba(255,255,255,0.07)', textAlign:'center' }}>
-          <p style={{ fontSize:11, color:'rgba(255,255,255,0.2)' }}>
+        <div style={{ marginTop:32, paddingTop:24, borderTop:'1px solid #f0e4d4', textAlign:'center' }}>
+          <p style={{ fontSize:11, color:'#c4a07a' }}>
             บริษัท ธนธรณินทร์ จำกัด · Mining Operations System<br/>
-            <span style={{ color:'rgba(255,255,255,0.12)' }}>Powered by TANAN v1.0 · © {new Date().getFullYear()}</span>
+            <span style={{ color:'#e5d5c0' }}>Powered by TANAN v1.0 · © {new Date().getFullYear()}</span>
           </p>
         </div>
       </div>
