@@ -57,13 +57,13 @@ export default function LoginPage() {
           <div style={{
             background:'linear-gradient(145deg, #ffffff 0%, #fdf8f2 100%)',
             borderRadius:16,
-            padding:'20px 36px',
+            padding:'20px 28px',
             margin:'0 auto 16px',
             display:'inline-block',
             border:'1.5px solid rgba(200,144,42,0.35)',
             boxShadow:'0 4px 20px rgba(200,144,42,0.12), inset 0 1px 0 rgba(255,255,255,0.8)',
           }}>
-            <div style={{ position:'relative', width:260, height:80 }}>
+            <div style={{ position:'relative', width:340, height:114 }}>
               <Image src="/logo.png" alt="TANAN Mining" fill style={{ objectFit:'contain' }} priority />
             </div>
           </div>
