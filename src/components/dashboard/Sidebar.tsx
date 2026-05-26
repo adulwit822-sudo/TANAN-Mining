@@ -28,21 +28,24 @@ export default function Sidebar() {
       {/* Gold accent stripe at top */}
       <div style={{ height: 3, background: 'linear-gradient(90deg, #3d1c08, #7a4018, #c8902a, #e8b84a, #c8902a, #7a4018, #3d1c08)', flexShrink: 0 }} />
 
-      {/* Logo */}
-      <div
-        className="flex items-center justify-center px-4 py-5"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
-      >
-        <div style={{ position: 'relative', width: '100%', maxWidth: 180, height: 56 }}>
-          <Image
-            src="/logo.png"
-            alt="TANAN — บริษัท ธนธรณินทร์ จำกัด"
-            fill
-            style={{ objectFit: 'contain', mixBlendMode: 'screen' }}
-            priority
-          />
-        </div>
-      </div>
+{/* Logo */}
+<div
+  className="flex items-center justify-center px-3 py-4"
+  style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+>
+  <div style={{
+    position: 'relative', width: '100%', maxWidth: 200, height: 68,
+    filter: 'brightness(3) contrast(1.1) saturate(1.2)',
+  }}>
+    <Image
+      src="/logo.png"
+      alt="TANAN — บริษัท ธนธรณินทร์ จำกัด"
+      fill
+      style={{ objectFit: 'contain', mixBlendMode: 'screen' }}
+      priority
+    />
+  </div>
+</div>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">

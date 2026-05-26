@@ -41,25 +41,25 @@ export default function Header({ title, subtitle, onRefresh, loading }: HeaderPr
 
       {/* Right: logo + controls */}
       <div className="flex items-center gap-3">
-        {/* TANAN logo — dark pill so black bg blends */}
-        <div style={{
-          background: 'linear-gradient(135deg, #2a1205, #4a2010)',
-          borderRadius: 10,
-          padding: '4px 14px',
-          border: '1px solid rgba(200,144,42,0.3)',
-          position: 'relative',
-          height: 40,
-          width: 130,
-          flexShrink: 0,
-        }}>
-          <Image
-            src="/logo.png"
-            alt="TANAN"
-            fill
-            style={{ objectFit: 'contain', mixBlendMode: 'screen', padding: '2px 4px' }}
-            priority
-          />
-        </div>
+{/* TANAN logo */}
+<div style={{
+  background: 'linear-gradient(135deg, #1a0800, #3d1c08)',
+  borderRadius: 10,
+  padding: '4px 12px',
+  border: '1px solid rgba(200,144,42,0.5)',
+  position: 'relative',
+  height: 48,
+  width: 160,
+  flexShrink: 0,
+}}>
+  <Image
+    src="/logo.png"
+    alt="TANAN"
+    fill
+    style={{ objectFit: 'contain', mixBlendMode: 'screen', padding: '2px 4px', filter: 'brightness(3) saturate(1.2)' }}
+    priority
+  />
+</div>
 
         {/* Date */}
         <span className="text-xs hidden lg:block" style={{
