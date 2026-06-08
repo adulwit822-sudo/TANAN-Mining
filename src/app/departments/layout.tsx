@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
+import { LangToggle } from '@/contexts/LanguageContext';
 import {
   Pickaxe, Map, Wrench, ShieldCheck,
   Layers, Building2, DollarSign,
@@ -97,6 +98,7 @@ export default function DepartmentsLayout({ children }: { children: React.ReactN
               <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.email || ''}</p>
             </div>
           </div>
+          <div style={{ marginBottom: 6 }}><LangToggle /></div>
           <button onClick={handleLogout} style={{ width: '100%', background: 'none', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, padding: '7px', color: 'rgba(255,255,255,0.35)', cursor: 'pointer', fontSize: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
             <LogOut size={12} /> ออกจากระบบ
           </button>
