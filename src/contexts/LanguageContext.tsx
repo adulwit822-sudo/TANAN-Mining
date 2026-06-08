@@ -1,12 +1,14 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { translations, Lang } from '@/lib/translations'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { translations, type Lang } from '@/lib/translations'
+
+type Translation = (typeof translations)[Lang]
 
 interface LangContextType {
   lang: Lang
   setLang: (l: Lang) => void
-  t: typeof translations['th']
+  t: Translation
 }
 
 const LangContext = createContext<LangContextType>({
@@ -19,8 +21,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>('th')
 
   useEffect(() => {
-    const saved = localStorage.getItem('tanan_lang') as Lang
-    if (saved === 'th' || saved === 'en') setLangState(saved)
+    const saved = localStorage.getItem('tanan_lang')
+    if (saved === 'th' || saved === 'en') {
+      setLangState(saved)
+    }
   }, [])
 
   function setLang(l: Lang) {
@@ -28,8 +32,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('tanan_lang', l)
   }
 
+  const value: LangContextType = {
+    lang,
+    setLang,
+    t: translations[lang],
+  }
+
   return (
-    <LangContext.Provider value={{ lang, setLang, t: translations[lang] }}>
+    <LangContext.Provider value={value}>
       {children}
     </LangContext.Provider>
   )
@@ -42,9 +52,10 @@ export function useLang() {
 // Toggle button component — drop it anywhere in the nav
 export function LangToggle() {
   const { lang, setLang } = useLang()
+
   return (
     <div style={{ display: 'flex', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(200,144,42,0.3)', flexShrink: 0 }}>
-      {(['th', 'en'] as Lang[]).map(l => (
+      {(['th', 'en'] as Lang[]).map((l) => (
         <button
           key={l}
           onClick={() => setLang(l)}

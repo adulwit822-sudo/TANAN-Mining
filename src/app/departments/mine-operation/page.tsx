@@ -28,8 +28,8 @@ export default function MineOperationPage() {
   const tx = t.mineOp;
   const ti = t.import;
 
-  const [records,  setRecords]  = useState([]);
-  const [sites,    setSites]    = useState([]);
+    const [records, setRecords] = useState<any[]>([]);
+    const [sites, setSites] = useState<any[]>([]);
   const [loading,  setLoading]  = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editId,   setEditId]   = useState(null);
@@ -42,13 +42,13 @@ export default function MineOperationPage() {
   // Import state
   const [showImport,   setShowImport]   = useState(false);
   const [importStep,   setImportStep]   = useState(1); // 1=upload 2=preview 3=map 4=done
-  const [importRows,   setImportRows]   = useState([]);
-  const [importCols,   setImportCols]   = useState([]);
-  const [colMap,       setColMap]       = useState({});
+    const [importRows, setImportRows] = useState<any[]>([]);
+    const [importCols, setImportCols] = useState<string[]>([]);
+  const [colMap, setColMap] = useState<Record<string, string>>({});
   const [importing,    setImporting]    = useState(false);
-  const [importResult, setImportResult] = useState(null);
+  const [importResult, setImportResult] = useState<any>(null);
   const [dragOver,     setDragOver]     = useState(false);
-  const fileRef = useRef(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -76,17 +76,20 @@ export default function MineOperationPage() {
   async function handleSave() {
     setSaving(true);
     const payload = { ...form, volume_tons:parseFloat(form.volume_tons)||0, grade_percent:parseFloat(form.grade_percent)||null, operator_count:parseInt(form.operator_count)||null };
-    if (editId) await supabase.from('production_records').update(payload).eq('id', editId);
-    else        await supabase.from('production_records').insert(payload);
+    if (editId) {
+  await (supabase as any).from('production_records').update(payload).eq('id', editId);
+} else {
+  await (supabase as any).from('production_records').insert(payload);
+}
     setSaving(false); setShowForm(false); setEditId(null); setForm(EMPTY); load();
   }
 
-  async function handleDelete(id) {
-    await supabase.from('production_records').delete().eq('id', id);
+  async function handleDelete(id: string) {
+    await (supabase as any).from('production_records').delete().eq('id', id);
     setDeleteId(null); load();
   }
 
-  function openEdit(r) {
+  function openEdit(r: any) {
     setForm({ site_id:r.site_id, date:r.date, shift:r.shift, ore_type:r.ore_type, volume_tons:r.volume_tons, grade_percent:r.grade_percent||'', operator_count:r.operator_count||'', notes:r.notes||'' });
     setEditId(r.id); setShowForm(true);
   }
@@ -99,22 +102,28 @@ export default function MineOperationPage() {
     XLSX.writeFile(wb, `production_${format(new Date(),'yyyyMMdd')}.xlsx`);
   }
 
-  // ── IMPORT FUNCTIONS ──
-  function parseFile(file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data  = new Uint8Array(e.target.result);
-        const wb    = XLSX.read(data, { type:'array', cellDates:true });
+// — IMPORT FUNCTIONS —
+function parseFile(file: File) {
+  const reader = new FileReader();
+  reader.onload = () => {
+  try {
+    const result = reader.result;
+    if (!result || typeof result === 'string') return;
+
+    const data = new Uint8Array(result);
+    const wb = XLSX.read(data, { type:'array', cellDates:true });
         const ws    = wb.Sheets[wb.SheetNames[0]];
-        const json  = XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
-        if (json.length < 2) return;
-        const headers = json[0].map(h => String(h).trim());
-        const rows    = json.slice(1).filter(r => r.some(c => c !== ''));
-        setImportCols(headers);
-        setImportRows(rows);
-        // Auto-map columns by guessing
-        const autoMap = {};
+        const json = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }) as any[][];
+                if (json.length < 2) return;
+
+                const headers = json[0].map((h: any) => String(h).trim());
+
+                const rows = json.slice(1).filter((r: any[]) => r.some((c: any) => c !== ''));
+setImportCols(headers);
+setImportRows(rows);
+
+// Auto guessing
+const autoMap: Record<string, string> = {};
         DB_FIELDS.forEach(f => {
           const guesses_th = f.label_th.toLowerCase();
           const guesses_en = f.label_en.toLowerCase();
@@ -133,7 +142,7 @@ export default function MineOperationPage() {
     reader.readAsArrayBuffer(file);
   }
 
-  function handleFileDrop(e) {
+  function handleFileDrop(e: any) {
     e.preventDefault(); setDragOver(false);
     const file = e.dataTransfer?.files[0] || e.target.files[0];
     if (file) parseFile(file);
@@ -142,17 +151,20 @@ export default function MineOperationPage() {
   async function handleImport() {
     setImporting(true);
     try {
-      const colIdx = (key) => importCols.indexOf(colMap[key]);
-      const getCellVal = (row, key) => {
-        const idx = colIdx(key);
-        return idx >= 0 ? row[idx] : undefined;
-      };
+      const colIdx = (key: string) => importCols.indexOf(colMap[key]);
+
+const getCellVal = (row: any[], key: string) => {
+  const idx = colIdx(key);
+  return idx >= 0 ? row[idx] : undefined;
+};
 
       // Resolve site names to IDs
-      const siteMap = {};
-      sites.forEach(s => { siteMap[s.name.toLowerCase()] = s.id; });
+      const siteMap: Record<string, string> = {};
+sites.forEach((s: any) => {
+  siteMap[s.name.toLowerCase()] = s.id;
+});
 
-      const toInsert = [];
+      const toInsert: any[] = [];
       for (const row of importRows) {
         const rawDate = getCellVal(row, 'date');
         let dateStr = '';
@@ -181,12 +193,12 @@ export default function MineOperationPage() {
         });
       }
 
-      const { error } = await supabase.from('production_records').insert(toInsert);
+      const { error } = await (supabase as any).from('production_records').insert(toInsert);
       if (error) throw error;
       setImportResult({ success:true, count:toInsert.length });
       setImportStep(4);
       load();
-    } catch(e) {
+    } catch(e: any) {
       setImportResult({ success:false, message: e.message });
       setImportStep(4);
     }
@@ -198,11 +210,25 @@ export default function MineOperationPage() {
   }
 
   // Styles
-  const IS = { width:'100%', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(200,144,42,0.2)', borderRadius:8, padding:'9px 12px', fontSize:13, color:'#fff', outline:'none', fontFamily:'inherit' };
-  const SS = { ...IS, cursor:'pointer' };
+const IS = {
+  width: '100%',
+  background: 'rgba(255,255,255,0.06)',
+  border: '1px solid rgba(200,144,42,0.2)',
+  borderRadius: 8,
+  padding: '9px 12px',
+  fontSize: 13,
+  color: '#fff',
+  outline: 'none',
+  fontFamily: 'inherit'
+};
 
-  return (
-    <div style={{ minHeight:'100vh' }}>
+const SS = {
+  ...IS,
+  cursor: 'pointer'
+};
+
+return (
+  <div style={{ minHeight: '100vh' }}>
       {/* Header */}
       <div style={{ padding:'22px 28px 18px', borderBottom:'1px solid rgba(255,255,255,0.06)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <div style={{ display:'flex', alignItems:'center', gap:14 }}>
@@ -268,8 +294,8 @@ export default function MineOperationPage() {
         {/* Table */}
         <div style={{ background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:14, overflow:'hidden' }}>
           <div style={{ padding:'14px 18px', borderBottom:'1px solid rgba(255,255,255,0.06)', display:'flex', gap:10 }}>
-            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={tx.search} style={{ flex:1, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:8, padding:'7px 12px', fontSize:12, color:'#fff', outline:'none' }}/>
-            <select value={shiftF} onChange={e=>setShiftF(e.target.value)} style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:8, padding:'7px 12px', fontSize:12, color:'rgba(255,255,255,0.7)', outline:'none' }}>
+            <input value={search} onChange={(e: any)=>setSearch(e.target.value)} placeholder={tx.search} style={{ flex:1, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:8, padding:'7px 12px', fontSize:12, color:'#fff', outline:'none' }}/>
+            <select value={shiftF} onChange={(e: any)=>setShiftF(e.target.value)} style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:8, padding:'7px 12px', fontSize:12, color:'rgba(255,255,255,0.7)', outline:'none' }}>
               <option value="all">{tx.allShifts}</option>
               <option value="morning">{tx.morning}</option>
               <option value="afternoon">{tx.afternoon}</option>
@@ -288,8 +314,8 @@ export default function MineOperationPage() {
               <tbody>
                 {filtered.slice(0,50).map(r=>(
                   <tr key={r.id} style={{ borderBottom:'1px solid rgba(255,255,255,0.04)' }}
-                    onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.03)'}
-                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                    onMouseEnter={(e: any)=>e.currentTarget.style.background='rgba(255,255,255,0.03)'}
+                    onMouseLeave={(e: any)=>e.currentTarget.style.background='transparent'}>
                     <td style={{ padding:'9px 14px', color:'rgba(255,255,255,0.45)', fontFamily:'monospace' }}>{r.date}</td>
                     <td style={{ padding:'9px 14px', color:'#fff', fontWeight:600 }}>{r.mining_sites?.name||'—'}</td>
                     <td style={{ padding:'9px 14px' }}>
@@ -324,33 +350,34 @@ export default function MineOperationPage() {
             <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
                 <div><label style={{ fontSize:11, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:5 }}>{tx.site}</label>
-                  <select value={form.site_id} onChange={e=>setForm({...form,site_id:e.target.value})} style={SS}>
+                  <select value={form.site_id} onChange={(e: any)=>setForm({...form,site_id:e.target.value})} style={SS}>
                     <option value="">{tx.selectSite}</option>
                     {sites.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}
                   </select></div>
                 <div><label style={{ fontSize:11, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:5 }}>{tx.date}</label>
-                  <input type="date" value={form.date} onChange={e=>setForm({...form,date:e.target.value})} style={IS}/></div>
+                  <input type="date" value={form.date} onChange={(e: any)=>setForm({...form,date:e.target.value})} style={IS}/></div>
               </div>
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
                 <div><label style={{ fontSize:11, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:5 }}>{tx.shift}</label>
-                  <select value={form.shift} onChange={e=>setForm({...form,shift:e.target.value})} style={SS}>
+                  <select value={form.shift} onChange={(e: any)=>setForm({...form,shift:e.target.value})} style={SS}>
                     <option value="morning">{tx.morning}</option>
                     <option value="afternoon">{tx.afternoon}</option>
                     <option value="night">{tx.night}</option>
                   </select></div>
                 <div><label style={{ fontSize:11, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:5 }}>{tx.oreType}</label>
-                  <select value={form.ore_type} onChange={e=>setForm({...form,ore_type:e.target.value})} style={SS}>
+                  <select value={form.ore_type} onChange={(e: any)=>setForm({...form,ore_type:e.target.value})} style={SS}>
                     {['limestone','iron_ore','silica','manganese','tin','tungsten'].map(o=><option key={o} value={o}>{o.replace('_',' ')}</option>)}
                   </select></div>
               </div>
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:10 }}>
                 {[['volume_tons',tx.volume],['grade_percent',tx.grade],['operator_count',tx.operators]].map(([k,l])=>(
                   <div key={k}><label style={{ fontSize:11, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:5 }}>{l}</label>
-                    <input type="number" value={form[k]} onChange={e=>setForm({...form,[k]:e.target.value})} style={IS} placeholder="0"/></div>
+                    <input type="number" value={(form as any)[k]} onChange={(e: any)=>setForm({ ...form, [k]: e.target.value } as any)} style={IS} placeholder="0" />
+                  </div>
                 ))}
               </div>
               <div><label style={{ fontSize:11, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:5 }}>{tx.notes}</label>
-                <textarea value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} rows={2} style={{ ...IS, resize:'vertical' }} placeholder={tx.notesPlaceholder}/></div>
+                <textarea value={form.notes} onChange={(e: any)=>setForm({...form,notes:e.target.value})} rows={2} style={{ ...IS, resize:'vertical' }} placeholder={tx.notesPlaceholder}/></div>
             </div>
             <div style={{ display:'flex', gap:10, marginTop:18 }}>
               <button onClick={()=>{setShowForm(false);setEditId(null);}} style={{ flex:1, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:10, padding:'10px', color:'rgba(255,255,255,0.5)', cursor:'pointer', fontSize:13 }}>{tx.cancel}</button>
@@ -411,7 +438,7 @@ export default function MineOperationPage() {
             {/* Step 1: Upload */}
             {importStep===1 && (
               <div
-                onDragOver={e=>{e.preventDefault();setDragOver(true);}}
+                onDragOver={(e: any)=>{e.preventDefault();setDragOver(true);}}
                 onDragLeave={()=>setDragOver(false)}
                 onDrop={handleFileDrop}
                 onClick={()=>fileRef.current?.click()}
@@ -464,7 +491,7 @@ export default function MineOperationPage() {
                         <p style={{ fontSize:12, color:'#c8902a', fontWeight:600 }}>{lang==='th'?f.label_th:f.label_en}</p>
                         <p style={{ fontSize:10, color:'rgba(255,255,255,0.3)' }}>{f.key}</p>
                       </div>
-                      <select value={colMap[f.key]||''} onChange={e=>setColMap({...colMap,[f.key]:e.target.value})} style={{ background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'8px 12px', fontSize:12, color:'#fff', outline:'none' }}>
+                      <select value={colMap[f.key]||''} onChange={(e: any)=>setColMap({...colMap,[f.key]:e.target.value})} style={{ background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:'8px 12px', fontSize:12, color:'#fff', outline:'none' }}>
                         <option value="">{ti.ignore}</option>
                         {importCols.map(c=><option key={c} value={c}>{c}</option>)}
                       </select>
