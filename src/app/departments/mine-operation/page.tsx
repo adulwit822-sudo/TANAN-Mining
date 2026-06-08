@@ -50,15 +50,15 @@ export default function MineOperationPage() {
     setSaving(true);
     const payload = { ...form, volume_tons: parseFloat(form.volume_tons)||0, grade_percent: parseFloat(form.grade_percent)||null, operator_count: parseInt(form.operator_count)||null };
     if (editId) {
-      await supabase.from('production_records').update(payload).eq('id', editId);
+      await (supabase as any).from('production_records').update(payload).eq('id', editId);
     } else {
-      await supabase.from('production_records').insert(payload);
+      await (supabase as any).from('production_records').insert(payload);
     }
     setSaving(false); setShowModal(false); setEditId(null); setForm(emptyForm); load();
   }
 
   async function handleDelete(id: string) {
-    await supabase.from('production_records').delete().eq('id', id);
+    await (supabase as any).from('production_records').delete().eq('id', id);
     setDeleteId(null); load();
   }
 
