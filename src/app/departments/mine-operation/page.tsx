@@ -68,9 +68,9 @@ export default function MineOperationPage() {
     (!search || `${r.mining_sites?.name} ${r.ore_type} ${r.date}`.toLowerCase().includes(search.toLowerCase()))
   );
 
-  const totalTons = filtered.reduce((s,r) => s + r.volume_tons, 0);
-  const todayTons = records.filter(r => r.date===format(new Date(),'yyyy-MM-dd')).reduce((s,r) => s+r.volume_tons, 0);
-  const byDate    = records.reduce((acc,r) => { acc[r.date]=(acc[r.date]||0)+r.volume_tons; return acc; }, {});
+  const totalTons = filtered.reduce((s,r) => s + parseFloat(r.volume_tons||0), 0);
+  const todayTons = records.filter(r => r.date===format(new Date(),"yyyy-MM-dd")).reduce((s,r) => s+parseFloat(r.volume_tons||0), 0);
+  const byDate    = records.reduce((acc,r) => { acc[r.date]=(acc[r.date]||0)+parseFloat(r.volume_tons||0); return acc; }, {});
   const chartData = Object.entries(byDate).sort(([a],[b])=>a.localeCompare(b)).slice(-14).map(([date,tons])=>({ date:format(new Date(date),'dd/MM'), tons }));
 
   async function handleSave() {
